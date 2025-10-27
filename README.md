@@ -13,20 +13,34 @@ Updates all DAST scans for your organization, removing a specific team from them
   - Submitter
     - Additional access to Dynamic Scans is required
 
-## Installation
+## Setup
+
 Clone this repository:
-    git clone https://github.com/cadonuno/veracode-start-scan.git
+
+    git clone https://github.com/cadonuno/veracode-remove-team-from-DAST-scans
 
 Install dependencies:
 
-    cd /veracode-start-scan
+    cd veracode-remove-team-from-DAST-scans
     pip install -r requirements.txt
 
+(Optional) Save Veracode API credentials in `~/.veracode/credentials`
+
+    [default]
+    veracode_api_key_id = <YOUR_API_KEY_ID>
+    veracode_api_key_secret = <YOUR_API_KEY_SECRET>
+
+
 ## Run
-    python ./veracode-remove-team-from-dast.py (arguments)
+If you have saved credentials as above you can run:
+
+    python veracode-remove-team-from-dast.py (arguments)
+
+Otherwise you will need to set environment variables:
+
+    export VERACODE_API_KEY_ID=<YOUR_API_KEY_ID>
+    export VERACODE_API_KEY_SECRET=<YOUR_API_KEY_SECRET>
+    python veracode-remove-team-from-dast.py (arguments)
 
 ## Supported Arguments:
-
-- `-vid`, `--veracode_api_key_id` - Veracode API key ID to use - a non-human/API account is recommended.
-- `-vkey`, `--veracode_api_key_secret` - Veracode API key secret to use - a non-human/API account is recommended.
 - `-t`, `--team` - Name of the team to remove from DAST scans.
