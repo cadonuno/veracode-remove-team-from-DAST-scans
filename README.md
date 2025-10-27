@@ -23,7 +23,7 @@ Install dependencies:
     pip install -r requirements.txt
 
 ## Run
-    python ./src/veracode-remove-team-from-dast.py (arguments)
+    python ./veracode-remove-team-from-dast.py (arguments)
 
 ## Supported Arguments:
 
