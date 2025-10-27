@@ -51,9 +51,10 @@ def remove_team_from_dast_if_present(team_id, dast_scan):
             attempt+=1
             has_succeded, should_retry = remove_team(new_teams_list, dast_scan, attempt)
             if has_succeded:
-                return None
+                return None, 1
             if not should_retry:
-                return dast_scan["name"]
+                return dast_scan["name"], 0
+    return "", 0
 
 def main():
     parser = argparse.ArgumentParser(
@@ -81,16 +82,21 @@ def main():
 
     print(f"Found {len(all_dast_scans)} DAST scans")
     errors = []
+    successful_updates = 0
     for dast_scan in all_dast_scans:
         full_analysis = Analyses().get(dast_scan["analysis_id"])
-        error = remove_team_from_dast_if_present(team_id, full_analysis)
+        error, count = remove_team_from_dast_if_present(team_id, full_analysis)
         if error:
             errors.append(error)
+        successful_updates+=count
 
     print("----------------------------")
-    print("Finished updating DAST scans")
+    if successful_updates > 0:
+        print(f"Successfully updated {successful_updates} DAST scans")
+    else:
+        print("Finished processing but no DAST scans were updated")
     if errors:
-        print("Failed to update the following DAST scans:")
+        print(" Failed to update the following DAST scans:")
         for error in errors:
             print(f" - {error}")
 
