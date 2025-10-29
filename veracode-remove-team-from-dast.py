@@ -15,24 +15,24 @@ def get_team_id(team_to_find):
 
     return None
 
-def remove_team(new_teams_list, dast_scan, attempt):
+def remove_team(new_teams_list, dast_scan):
     print(f"Removing team from scan: {dast_scan["name"]}")
     print(f"New teams list: {new_teams_list}")
-    dast_scan["visibility"]["team_identifiers"] = new_teams_list
-    if len(new_teams_list) == 0:
-        dast_scan["visibility"]["setup_type"] = "SEC_LEADS_ONLY"
-    request_uri = Analyses().base_url + '/{}'.format(dast_scan["analysis_id"])
+    request_uri = Analyses().base_url + '/{}'.format(dast_scan["analysis_id"])+"?method=PATCH&run_verification=false"
 
+
+    new_scan_json = {}
+    new_scan_json["analysis_id"]= dast_scan["analysis_id"]
+    new_scan_json["visibility"] = dast_scan["visibility"]
+
+    new_scan_json["visibility"]["team_identifiers"] = new_teams_list
+    if len(new_teams_list) == 0:
+        new_scan_json["visibility"]["setup_type"] = "SEC_LEADS_ONLY"
     try:
-        apihelper.APIHelper()._rest_request(request_uri,"PUT",params={},body=json.dumps(dast_scan))
+        apihelper.APIHelper()._rest_request(request_uri,"PUT",params={},body=json.dumps(new_scan_json))
         return True, True
     except Exception as e:
-        if attempt < 10:
-            wait_time=attempt*10
-            print(f"Failed to update scan '{dast_scan["name"]}', waiting {wait_time} seconds")
-            time.sleep(wait_time)
-            return False, True
-    return False, False
+        return False, False
 
 def remove_team_from_dast_if_present(team_id, dast_scan):
     new_teams_list=[]
@@ -49,7 +49,7 @@ def remove_team_from_dast_if_present(team_id, dast_scan):
         should_retry = True
         while should_retry:
             attempt+=1
-            has_succeded, should_retry = remove_team(new_teams_list, dast_scan, attempt)
+            has_succeded, should_retry = remove_team(new_teams_list, dast_scan)
             if has_succeded:
                 return None, 1
             if not should_retry:
@@ -68,9 +68,10 @@ def main():
         required=True
     )
 
-    args = parser.parse_args()
+    #args = parser.parse_args()
 
-    team_to_remove = args.team.strip()
+    #team_to_remove = args.team.strip()
+    team_to_remove = "Another Demo"
     print(f"Looking for team named {team_to_remove}")
     team_id = get_team_id(team_to_remove)
     if not team_id:
