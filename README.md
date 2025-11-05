@@ -1,4 +1,4 @@
-# Veracode scan workflow plugin
+# Veracode remove team from dast
 Updates all DAST scans for your organization, removing a specific team from them.
 
 ## Requirements:
