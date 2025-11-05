@@ -68,11 +68,9 @@ def main():
         required=True
     )
 
-    #args = parser.parse_args()
+    args = parser.parse_args()
 
-    #team_to_remove = args.team.strip()
-    team_to_remove = "Another Demo"
-    print(f"Looking for team named {team_to_remove}")
+    team_to_remove = args.team.strip()
     team_id = get_team_id(team_to_remove)
     if not team_id:
         print(f"Team named {team_to_remove} not found")
